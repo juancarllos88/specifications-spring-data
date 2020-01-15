@@ -9,9 +9,10 @@ import javax.persistence.*;
 @Entity
 public class Person {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-    private String name;
-    private Integer cpf, phone;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+	private String name;
+	private Integer cpf;
+	private Integer phone;
 }
