@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Implementation-Title: specification-sample
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: juancarllos88
+Implementation-Vendor-Id: br.com.specification.sample
+Build-Jdk: 1.8.0_221
+Implementation-URL: http://projects.spring.io/spring-boot/specificatio
+ n-sample/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
