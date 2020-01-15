@@ -8,8 +8,9 @@ import javax.persistence.criteria.Predicate;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class SpecificationBuilder {
 
 	public <T> Specification<T> criarFiltro(Map<String, String> filtros, Class<T> data) {
@@ -25,7 +26,9 @@ public class SpecificationBuilder {
 				}
 			});
 
-			return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			return criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()]));
 		};
 	}
+	
+	
 }

@@ -43,8 +43,7 @@ public class PersonRestService {
 	@GetMapping
 	public Page<Person> listagem(@RequestParam(required = false) Map<String, String> filters, Pageable page) {
 		Specification<Person> criterios = specificationBuilder.criarFiltro(filters, Person.class);
-		return null;
-		//return personService.listar(criterios, page);
+		return personService.listar(criterios, page);
 	}
 
 }
