@@ -1,2 +1,2 @@
-# specification-sample
-Exemplo criado para o artigo sobre specifications
+# specification-spring-data
+Exemplo usando o specification com spring data
