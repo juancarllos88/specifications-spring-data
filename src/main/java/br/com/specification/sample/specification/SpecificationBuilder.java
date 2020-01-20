@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
@@ -45,11 +46,16 @@ public class SpecificationBuilder {
 					try {
 						field.setAccessible(true);
 						Object value = field.get(objeto);
+						if (value == null) {
+							continue;
+						}
 						SearchParam parametros = field.getAnnotation(SearchParam.class);
 						if (value instanceof Number) {
-							predicates.add(buildPredicate(root, criteriaBuilder, parametros,Integer.valueOf(value.toString())));
-						} else {
-
+							predicates.add(getPredicate(root, criteriaBuilder, parametros,Integer.valueOf(value.toString())));
+						} else if (value instanceof List){
+							predicates.add(getPredicate(root, criteriaBuilder, parametros,(List<?>) value));
+						}else {
+							predicates.add(getPredicate(root, criteriaBuilder, parametros, value.toString()));
 						}
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						e.printStackTrace();
@@ -62,7 +68,7 @@ public class SpecificationBuilder {
 		};
 	}
 	
-	private Predicate buildPredicate(Root<?> root, CriteriaBuilder criteriaBuilder, SearchParam parametros, Integer value) {
+	private Predicate getPredicate(Root<?> root, CriteriaBuilder criteriaBuilder, SearchParam parametros, Integer value) {
 		switch (parametros.operacao()) {
 		case EQUALS:
 			return criteriaBuilder.equal(root.get(parametros.propriedade()), value);
@@ -73,6 +79,23 @@ public class SpecificationBuilder {
 		default:
 			return criteriaBuilder.equal(root.get(parametros.propriedade()), value);
 		}
+	}
+	
+	private Predicate getPredicate(Root<?> root, CriteriaBuilder criteriaBuilder, SearchParam parametros, String value) {
+		switch (parametros.operacao()) {
+		case EQUALS:
+			return criteriaBuilder.equal(root.get(parametros.propriedade()), value);
+		case ILIKE:
+			return criteriaBuilder.like(root.get(parametros.propriedade()), value + "%");
+		default:
+			return criteriaBuilder.equal(root.get(parametros.propriedade()), value);
+		}
+	}
+	
+	private Predicate getPredicate(Root<?> root, CriteriaBuilder criteriaBuilder, SearchParam parametros,List<?> value) {
+		List<Long> ids = value.stream().map(v -> Long.parseLong(v.toString())).collect(Collectors.toList());
+		return criteriaBuilder.in(root.get(parametros.propriedade()).in(ids));
+
 	}
 
 
